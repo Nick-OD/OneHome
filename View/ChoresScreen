@@ -1,0 +1,113 @@
+import React from 'react';
+import {  View, TouchableOpacity, Text, TextInput,} from 'react-native';
+import DatePicker from 'react-native-datepicker';
+import styles from "./StyleSheet";
+import BottomNavigation, { Tab } from 'react-native-material-bottom-navigation'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import ViewEvent from "./ViewEvent";
+import CalendarScreen from "./CalendarScreen";
+import { Hoshi } from 'react-native-textinput-effects';
+import { Card, CardTitle, CardContent, CardAction, CardButton, CardImage } from 'react-native-cards';
+
+
+
+var AddDate = [] ;
+let i = 0;
+
+class AddEvent extends React.Component {
+  static navigationOptions = ({ navigation}) => {
+		const params = navigation.state.params || {};
+		return {
+            headerTitle: 'Add Event',
+            headerTitleStyle: { color: 'black', fontSize: 25},
+		}
+	};
+    constructor(props){
+    super(props)
+    this.state = {date:"2018-01-01", time: "12:00", name: "", notes: "", newHeight: 50, event: 0}
+    this.state = { activeTab: 3 }
+    this.handleTabChange = this.handleTabChange.bind(this)
+}
+
+
+AddNewDate=()=>{
+  if (i >= 0){
+      AddDate.push( this.state.date.toString() );
+      i++;
+  }
+  if (this.state.event == 0){
+    this.state.event++;
+  }
+  this.props.navigation.navigate('ViewEvent', {
+              date: this.state.date,
+              name: this.state.name, 
+              time: this.state.time,
+              notes: this.state.notes,
+              event: this.state.event
+           })
+  }
+
+  onChangeText = (typedText) => {
+    this.setState({text: typedText})
+  }
+
+  _onPress =() => {
+    this.AddNewDate
+  }
+
+handleTabChange(newTabIndex, oldTabIndex) {
+    this.setState({ activeTab: newTabIndex })
+    }
+    
+  render() {
+    
+    return(
+        <View style={{ flex: 1 }}>
+        <View style={styles.container}>
+    <Text style={styles.text}>Name of Event:</Text>
+      <TextInput style={styles.input}
+          onChangeText = {(text) => this.setState({name: text})}
+   />
+   
+    
+    <DatePicker
+        style={styles.datePicker}
+        date={this.state.date}
+        mode="date"
+        placeholder="select date"
+        format="YYYY-MM-DD"
+        minDate="2018-01-01"
+        maxDate="2030-12-31"
+        confirmBtnText="Confirm"
+        cancelBtnText="Cancel"
+        onDateChange={(date) => {this.setState({date: date})}}
+      />
+       <DatePicker
+        style={styles.timePicker}
+        date={this.state.time}
+        mode="time"
+        is24Hour = {false}
+        placeholder="select time"
+        confirmBtnText="Confirm"
+        cancelBtnText="Cancel"
+        onDateChange={(time) => {this.setState({time: time})}}
+      />
+      
+    <Text style={styles.text}>Notes:</Text>
+      <TextInput style={styles.input}
+          onChangeText = {(text) => this.setState({notes: text})}
+   />
+         <TouchableOpacity 
+            onPress={this.AddNewDate} 
+             style={styles.button}> <Text style={styles.buttonText}>Add Event</Text>
+          </TouchableOpacity>
+      </View>
+
+       
+       </View>
+       
+
+   );
+}
+}
+export default AddEvent;
